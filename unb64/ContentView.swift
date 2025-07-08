@@ -1,15 +1,8 @@
 //
 //  ContentView.swift
-//
-//
-//  Created by Montel Gray on 2025.07.08.
-//
-
-
-//
-//  ContentView.swift
 //  unb64
 //
+//  Created by Montel Gray on 2025.07.08.
 //
 
 import SwiftUI
@@ -35,7 +28,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HStack(spacing: 20) {
-                VStack(alignment: .leading) {
+                VStack(alignment: .center) {
                     Text("Base64 Input:")
                         .font(.headline)
                     
@@ -51,14 +44,15 @@ struct ContentView: View {
                             .border(Color.gray)
                     }
                     .frame(minHeight: 175)
-
-                    if let msg = copyMessageLeft {
-                        Text(msg)
-                            .foregroundColor(.green)
-                            .font(.caption)
+                    
+                    Button(action: {
+                        base64Input = ""
+                    }) {
+                        Label("Clear", systemImage: "xmark.circle")
                     }
                 }
-                VStack(alignment: .leading) {
+                
+                VStack(alignment: .center) {
                     Text("Plain Text Input:")
                         .font(.headline)
                     
@@ -74,20 +68,20 @@ struct ContentView: View {
                             .border(Color.gray)
                     }
                     .frame(minHeight: 175)
-                                      
-                    if let msg = copyMessageRight {
-                        Text(msg)
-                            .foregroundColor(.green)
-                            .font(.caption)
+                    
+                    Button(action: {
+                        plainTextInput = ""
+                    }) {
+                        Label("Clear", systemImage: "xmark.circle")
                     }
                 }
             }
             
             Divider()
-                .padding(.vertical, 20)
+                .padding(.vertical, 7.5)
             
             HStack(spacing: 20) {
-                VStack(alignment: .leading) {
+                VStack(alignment: .center) {
                     Text("Decoded Output:")
                         .font(.headline)
                     
@@ -98,9 +92,27 @@ struct ContentView: View {
                             .disabled(true)
                     }
                     .frame(minHeight: 100)
+                    // "Copy Decoded Text" button
+                    Button(action: {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(decodedOutput, forType: .string)
+                        copyMessageLeft = "Copied Decoded Text!"
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            copyMessageLeft = nil
+                        }
+                    }) {
+                        Label("Copy Decoded Text", systemImage: "doc.on.doc")
+                    }
+                    .padding(.top, 4)
+                    // Button end
+                    if let msg = copyMessageLeft {
+                        Text(msg)
+                            .foregroundColor(.green)
+                            .font(.caption)
+                    }
                 }
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .center) {
                     Text("Encoded Output:")
                         .font(.headline)
                     
@@ -111,34 +123,27 @@ struct ContentView: View {
                             .disabled(true)
                     }
                     .frame(minHeight: 100)
+                    // "Copy encoded base64" button
+                    Button(action: {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(encodedOutput, forType: .string)
+                        copyMessageRight = "Copied Encoded Base64!"
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            copyMessageRight = nil
+                        }
+                    }) {
+                        Label("Copy Encoded Base64", systemImage: "doc.on.doc")
+                    }
+                    .padding(.top, 4)
+                    // Button end
+                    if let msg = copyMessageRight {
+                        Text(msg)
+                            .foregroundColor(.green)
+                            .font(.caption)
+                    }
                 }
             }
-            // BUTTONS!
-            // "Copy Base64"
-            Button(action: {
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(base64Input, forType: .string)
-                copyMessageLeft = "Copied Base64!"
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    copyMessageLeft = nil
-                }
-            }) {
-                Label("Copy Base64", systemImage: "doc.on.doc")
-            }
-            .padding(.top, 8)
-            // "Copy Encoded Base64"
-            Button(action: {
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(encodedOutput, forType: .string)
-                copyMessageRight = "Copied Encoded Base64!"
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    copyMessageRight = nil
-                }
-            }) {
-                Label("Copy Encoded Base64", systemImage: "doc.on.doc")
-            }
-            .padding(.top, 8)
-            // END BUTTONS!
+            
             Spacer()
         }
         .padding()
