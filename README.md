@@ -24,10 +24,13 @@ _(Add a screenshot here if you’d like!)_
 ---
 
 ## 🚀 How to Run
-
+### To compile on your own:
 1. Open the project in **Xcode**.
 2. Make sure you select **"My Mac"** as the build target (or your iOS device if you want to test there).
 3. Click **Run** ▶️.
+### Or run the `.app` directly  
+- After building, an executable **`unb64.app`** is generated in the `/bin` folder.
+- You can run the app directly by opening `/bin/unb64.app` in Finder.
 
 ---
 
