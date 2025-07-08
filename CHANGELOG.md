@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+# [1.2.0] - 2025-07-08
+### UI v2
+- Complete dark theme with modern gradient background and glassy container styling.
+- Rounded corners, subtle shadows, white text, underlined input fields, and consistent button styling.
+- Clear, consistent look inspired by modern CSS login card styling.
+
 ## [1.1.3] - 2025-07-08
 ### Changed
 - Changed `VStack` alignment for output sections from `.leading` to `.center` to center-align the Copy buttons and confirmation messages.
