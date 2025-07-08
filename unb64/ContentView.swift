@@ -7,6 +7,69 @@
 
 import SwiftUI
 
+struct InputEditor: View {
+    let title: String
+    let placeholder: String
+    @Binding var text: String
+    let clearAction: () -> Void
+    
+    var body: some View {
+        VStack(alignment: .center) {
+            Text(title)
+                .font(.headline)
+            
+            ZStack(alignment: .topLeading) {
+                if text.isEmpty {
+                    Text(placeholder)
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                        .padding(.leading, 4)
+                }
+                TextEditor(text: $text)
+                    .padding(4)
+                    .border(Color.gray)
+            }
+            .frame(minHeight: 175)
+            
+            Button(action: clearAction) {
+                Label("Clear", systemImage: "xmark.circle")
+            }
+        }
+    }
+}
+
+struct OutputEditor: View {
+    let title: String
+    let output: String
+    let copyAction: () -> Void
+    let copyMessage: String?
+    let copyLabel: String
+    
+    var body: some View {
+        VStack(alignment: .center) {
+            Text(title)
+                .font(.headline)
+            
+            TextEditor(text: .constant(output))
+                .padding(4)
+                .border(Color.gray)
+                .disabled(true)
+                .frame(minHeight: 100)
+            
+            Button(action: copyAction) {
+                Label(copyLabel, systemImage: "doc.on.doc")
+            }
+            .padding(.top, 8)
+            
+            if let msg = copyMessage {
+                Text(msg)
+                    .foregroundColor(.green)
+                    .font(.caption)
+            }
+        }
+    }
+}
+
 struct ContentView: View {
     @State private var base64Input: String = ""
     @State private var plainTextInput: String = ""
@@ -28,120 +91,54 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HStack(spacing: 20) {
-                VStack(alignment: .center) {
-                    Text("Base64 Input:")
-                        .font(.headline)
-                    
-                    ZStack(alignment: .topLeading) {
-                        if base64Input.isEmpty {
-                            Text("Enter Base64 here...")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                                .padding(.leading, 4)
-                        }
-                        TextEditor(text: $base64Input)
-                            .padding(4)
-                            .border(Color.gray)
-                    }
-                    .frame(minHeight: 175)
-                    
-                    Button(action: {
-                        base64Input = ""
-                    }) {
-                        Label("Clear", systemImage: "xmark.circle")
-                    }
-                }
+                InputEditor(
+                    title: "Base64 Input:",
+                    placeholder: "Enter Base64 here...",
+                    text: $base64Input,
+                    clearAction: { base64Input = "" }
+                )
                 
-                VStack(alignment: .center) {
-                    Text("Plain Text Input:")
-                        .font(.headline)
-                    
-                    ZStack(alignment: .topLeading) {
-                        if plainTextInput.isEmpty {
-                            Text("Enter plain text here...")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
-                                .padding(.leading, 4)
-                        }
-                        TextEditor(text: $plainTextInput)
-                            .padding(4)
-                            .border(Color.gray)
-                    }
-                    .frame(minHeight: 175)
-                    
-                    Button(action: {
-                        plainTextInput = ""
-                    }) {
-                        Label("Clear", systemImage: "xmark.circle")
-                    }
-                }
+                InputEditor(
+                    title: "Plain Text Input:",
+                    placeholder: "Enter plain text here...",
+                    text: $plainTextInput,
+                    clearAction: { plainTextInput = "" }
+                )
             }
             
             Divider()
                 .padding(.vertical, 7.5)
             
             HStack(spacing: 20) {
-                VStack(alignment: .center) {
-                    Text("Decoded Output:")
-                        .font(.headline)
-                    
-                    ZStack(alignment: .topLeading) {
-                        TextEditor(text: .constant(decodedOutput))
-                            .padding(4)
-                            .border(Color.gray)
-                            .disabled(true)
-                    }
-                    .frame(minHeight: 100)
-                    // "Copy Decoded Text" button
-                    Button(action: {
+                OutputEditor(
+                    title: "Decoded Output:",
+                    output: decodedOutput,
+                    copyAction: {
                         NSPasteboard.general.clearContents()
                         NSPasteboard.general.setString(decodedOutput, forType: .string)
                         copyMessageLeft = "Copied Decoded Text!"
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             copyMessageLeft = nil
                         }
-                    }) {
-                        Label("Copy Decoded Text", systemImage: "doc.on.doc")
-                    }
-                    .padding(.top, 4)
-                    // Button end
-                    if let msg = copyMessageLeft {
-                        Text(msg)
-                            .foregroundColor(.green)
-                            .font(.caption)
-                    }
-                }
+                    },
+                    copyMessage: copyMessageLeft,
+                    copyLabel: "Copy Decoded Text"
+                )
                 
-                VStack(alignment: .center) {
-                    Text("Encoded Output:")
-                        .font(.headline)
-                    
-                    ZStack(alignment: .topLeading) {
-                        TextEditor(text: .constant(encodedOutput))
-                            .padding(4)
-                            .border(Color.gray)
-                            .disabled(true)
-                    }
-                    .frame(minHeight: 100)
-                    // "Copy encoded base64" button
-                    Button(action: {
+                OutputEditor(
+                    title: "Encoded Output:",
+                    output: encodedOutput,
+                    copyAction: {
                         NSPasteboard.general.clearContents()
                         NSPasteboard.general.setString(encodedOutput, forType: .string)
                         copyMessageRight = "Copied Encoded Base64!"
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             copyMessageRight = nil
                         }
-                    }) {
-                        Label("Copy Encoded Base64", systemImage: "doc.on.doc")
-                    }
-                    .padding(.top, 4)
-                    // Button end
-                    if let msg = copyMessageRight {
-                        Text(msg)
-                            .foregroundColor(.green)
-                            .font(.caption)
-                    }
-                }
+                    },
+                    copyMessage: copyMessageRight,
+                    copyLabel: "Copy Encoded Base64"
+                )
             }
             
             Spacer()

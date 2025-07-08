@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.1.3] - 2025-07-08
+### Changed
+- Changed `VStack` alignment for output sections from `.leading` to `.center` to center-align the Copy buttons and confirmation messages.
+- Improved visual balance for output actions.
+- Returned divider padding back to a lower value because OCD!
+
+## [1.1.2] - 2025-07-08
+### Changed
+- Refactored ContentView to use reusable `InputEditor` and `OutputEditor` components.
+- Removed duplicated layout code for input/output sections.
+- Improved maintainability and readability of the SwiftUI view.
+
 ## [1.1.1] - 2025-07-08
 ### Fixed
 - Moved "Copy" buttons to sit directly under the decoded and encoded output sections instead of below the inputs.
