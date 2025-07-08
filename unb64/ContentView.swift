@@ -16,6 +16,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var base64Input: String = ""
+    @State private var copyMessage: String? = nil
     
     var decodedOutput: String {
         guard let data = Data(base64Encoded: base64Input) else {
@@ -25,19 +26,51 @@ struct ContentView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("Base64 Input:")
                 .font(.headline)
-            TextEditor(text: $base64Input)
-                .frame(minHeight: 100)
-                .border(Color.gray)
+            
+            ZStack(alignment: .topLeading) {
+                if base64Input.isEmpty {
+                    Text("Enter Base64 text here...")
+                        .foregroundColor(.gray)
+                        .padding(.top, 8)
+                        .padding(.leading, 4)
+                }
+                TextEditor(text: $base64Input)
+                    .padding(4)
+                    .border(Color.gray)
+            }
+            .frame(minHeight: 120)
             
             Text("Decoded Output:")
                 .font(.headline)
-            TextEditor(text: .constant(decodedOutput))
-                .frame(minHeight: 100)
-                .border(Color.gray)
-                .disabled(true)
+            
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: .constant(decodedOutput))
+                    .padding(4)
+                    .border(Color.gray)
+                    .disabled(true)
+            }
+            .frame(minHeight: 120)
+            
+            Button(action: {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(decodedOutput, forType: .string)
+                copyMessage = "Copied!"
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    copyMessage = nil
+                }
+            }) {
+                Label("Copy Decoded Text", systemImage: "doc.on.doc")
+            }
+            .padding(.top, 8)
+            
+            if let msg = copyMessage {
+                Text(msg)
+                    .foregroundColor(.green)
+                    .font(.caption)
+            }
             
             Spacer()
         }
