@@ -12,11 +12,12 @@ struct InputEditor: View {
     let placeholder: String
     @Binding var text: String
     let clearAction: () -> Void
+    @ObservedObject var fontSizeManager: FontSizeManager
 
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             Text(title)
-                .font(.headline)
+                .font(.system(size: fontSizeManager.fontSize + 2, weight: .semibold))
                 .foregroundColor(.white)
 
             ZStack(alignment: .topLeading) {
@@ -25,9 +26,11 @@ struct InputEditor: View {
                         .foregroundColor(.gray.opacity(0.7))
                         .padding(.leading, 4)
                         .padding(.top, 6)
+                        .font(.system(size: fontSizeManager.fontSize))
                 }
                 TextEditor(text: $text)
                     .foregroundColor(.white)
+                    .font(.system(size: fontSizeManager.fontSize, design: .monospaced))
                     .padding(4)
                     .background(Color.clear)
                     .overlay(
@@ -53,15 +56,17 @@ struct OutputEditor: View {
     let copyAction: () -> Void
     let copyMessage: String?
     let copyLabel: String
+    @ObservedObject var fontSizeManager: FontSizeManager
 
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             Text(title)
-                .font(.headline)
+                .font(.title)
                 .foregroundColor(.white)
 
             TextEditor(text: .constant(output))
                 .foregroundColor(.white)
+                .font(.system(size: fontSizeManager.fontSize, design: .monospaced))
                 .padding(4)
                 .background(Color.clear)
                 .overlay(
@@ -85,7 +90,7 @@ struct OutputEditor: View {
             if let msg = copyMessage {
                 Text(msg)
                     .foregroundColor(.green)
-                    .font(.caption)
+                    .font(.system(size: fontSizeManager.fontSize - 2))
             }
         }
     }
@@ -109,6 +114,8 @@ struct ContentView: View {
     @State private var plainTextInput: String = ""
     @State private var copyMessageLeft: String? = nil
     @State private var copyMessageRight: String? = nil
+
+    @ObservedObject var fontSizeManager: FontSizeManager
 
     var decodedOutput: String {
         guard let data = Data(base64Encoded: base64Input) else {
@@ -138,14 +145,16 @@ struct ContentView: View {
                         title: "Base64 Input",
                         placeholder: "Enter Base64 here...",
                         text: $base64Input,
-                        clearAction: { base64Input = "" }
+                        clearAction: { base64Input = "" },
+                        fontSizeManager: fontSizeManager
                     )
 
                     InputEditor(
                         title: "Plain Text Input",
                         placeholder: "Enter plain text here...",
                         text: $plainTextInput,
-                        clearAction: { plainTextInput = "" }
+                        clearAction: { plainTextInput = "" },
+                        fontSizeManager: fontSizeManager
                     )
                 }
 
@@ -172,7 +181,8 @@ struct ContentView: View {
                             }
                         },
                         copyMessage: copyMessageLeft,
-                        copyLabel: "Copy Decoded"
+                        copyLabel: "Copy Decoded",
+                        fontSizeManager: fontSizeManager
                     )
 
                     OutputEditor(
@@ -187,7 +197,8 @@ struct ContentView: View {
                             }
                         },
                         copyMessage: copyMessageRight,
-                        copyLabel: "Copy Encoded"
+                        copyLabel: "Copy Encoded",
+                        fontSizeManager: fontSizeManager
                     )
                 }
             }
@@ -203,5 +214,5 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    ContentView(fontSizeManager: FontSizeManager())
 }
