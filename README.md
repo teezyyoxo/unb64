@@ -21,7 +21,7 @@
 
 ## 📷 Screenshot
 
-_(Add a screenshot here if you’d like!)_
+![image](https://github.com/user-attachments/assets/48b9eb71-e2ae-4a26-9341-b82ee93fc785)
 
 ---
 
