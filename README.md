@@ -1,5 +1,7 @@
 # 🧩 unb64
 
+<img src="https://github.com/teezyyoxo/unb64/blob/main/unb64/icons/AppIcon1024.png?raw=true" alt="unb64 icon" width="128">
+
 **unb64** is a simple, clean SwiftUI utility for macOS (and iOS-compatible) that lets you convert Base64-encoded text to plain text — and vice versa — **in real time**.
 
 ---
