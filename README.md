@@ -50,8 +50,6 @@ _(Add a screenshot here if you’d like!)_
 
 See [`CHANGELOG.md`](./CHANGELOG.md) for full version notes.
 
-Current version: **1.1.3**
-
 ---
 
 ## 🤝 License
